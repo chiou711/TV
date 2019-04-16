@@ -1,5 +1,6 @@
 package com.cw.tv;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BrowseFragment;
@@ -7,6 +8,7 @@ import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
+import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
@@ -96,6 +98,7 @@ public class MainFragment extends BrowseFragment {
 
 	private void setupEventListeners() {
 		setOnItemViewSelectedListener(new ItemViewSelectedListener());
+		setOnItemViewClickedListener(new ItemViewClickedListener());
 	}
 
 	private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
@@ -113,6 +116,23 @@ public class MainFragment extends BrowseFragment {
 			}
 		}
 	}
+
+	private final class ItemViewClickedListener implements OnItemViewClickedListener {
+		@Override
+		public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
+		                          RowPresenter.ViewHolder rowViewHolder, Row row) {
+			// each time the item is clicked, code inside here will be executed.
+			if (item instanceof Movie) {
+				Movie movie = (Movie) item;
+				Log.d(TAG, "Item: " + item.toString());
+				Intent intent = new Intent(getActivity(), DetailsActivity.class);
+				intent.putExtra(DetailsActivity.MOVIE, movie);
+
+				getActivity().startActivity(intent);
+			}
+		}
+	}
+
 
 	private class GridItemPresenter extends Presenter {
 		@Override

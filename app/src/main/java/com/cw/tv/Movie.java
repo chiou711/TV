@@ -17,6 +17,7 @@ package com.cw.tv;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -24,7 +25,7 @@ import java.net.URISyntaxException;
  *  Modified from AOSP sample source code, by corochann on 2/7/2015.
  *  Movie class represents video entity with title, description, image thumbs and video url.
  */
-public class Movie {
+public class Movie  implements Serializable {
 
 	private static final String TAG = Movie.class.getSimpleName();
 
@@ -32,6 +33,8 @@ public class Movie {
 	private long id;
 	private String title;
 	private String studio;
+	private String description;
+	private String cardImageUrl;
 
 	public Movie() {
 	}
@@ -68,8 +71,6 @@ public class Movie {
 				'}';
 	}
 
-	private String cardImageUrl;
-
 	public String getCardImageUrl() {
 		return cardImageUrl;
 	}
@@ -84,5 +85,13 @@ public class Movie {
 		} catch (URISyntaxException e) {
 			return null;
 		}
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
