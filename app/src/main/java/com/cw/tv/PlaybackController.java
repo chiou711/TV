@@ -53,12 +53,159 @@ public class PlaybackController {
 		}
 	}
 
+	public void setVideoView (VideoView videoView) {
+		mVideoView = videoView;
+
+		/* Callbacks for mVideoView */
+		setupCallbacks();
+
+	}
+
+	public void setMovie (Movie movie) {
+		//Log.v(TAG, "setMovie: " + movie.toString());
+		mVideoView.setVideoPath(movie.getVideoUrl());
+	}
+
+
+	public void setVideoPath(String videoUrl) {
+		setPosition(0);
+		mVideoView.setVideoPath(videoUrl);
+		mStartTimeMillis = 0;
+		mDuration = Utils.getDuration(videoUrl);
+	}
+
+	public void setPosition(int position) {
+		if (position > mDuration) {
+			Log.d(TAG, "position: " + position + ", mDuration: " + mDuration);
+			mPosition = (int) mDuration;
+		} else if (position < 0) {
+			mPosition = 0;
+			mStartTimeMillis = System.currentTimeMillis();
+		} else {
+			mPosition = position;
+		}
+		mStartTimeMillis = System.currentTimeMillis();
+		Log.d(TAG, "position set to " + mPosition);
+	}
+
+	public int getCurrentPosition() {
+		return mVideoView.getCurrentPosition();
+	}
+
+
+	private void updatePlaybackState() {
+		PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
+				.setActions(getAvailableActions());
+		int state = PlaybackState.STATE_PLAYING;
+		if (mCurrentPlaybackState == PlaybackState.STATE_PAUSED || mCurrentPlaybackState == PlaybackState.STATE_NONE) {
+			state = PlaybackState.STATE_PAUSED;
+		}
+		stateBuilder.setState(state, getCurrentPosition(), 1.0f);
+		mSession.setPlaybackState(stateBuilder.build());
+	}
+
 	public void releaseMediaSession() {
 		if(mSession != null) {
 			mSession.release();
 		}
 	}
 
+
+	private long getAvailableActions() {
+		long actions = PlaybackState.ACTION_PLAY |
+				PlaybackState.ACTION_PAUSE |
+				PlaybackState.ACTION_PLAY_PAUSE |
+				PlaybackState.ACTION_REWIND |
+				PlaybackState.ACTION_FAST_FORWARD |
+				PlaybackState.ACTION_SKIP_TO_PREVIOUS |
+				PlaybackState.ACTION_SKIP_TO_NEXT |
+				PlaybackState.ACTION_PLAY_FROM_MEDIA_ID |
+				PlaybackState.ACTION_PLAY_FROM_SEARCH;
+		return actions;
+	}
+
+	public int getBufferPercentage() {
+		return mVideoView.getBufferPercentage();
+	}
+
+	public int calcBufferedTime(int currentTime) {
+		int bufferedTime;
+		bufferedTime = currentTime + (int) ((mDuration - currentTime) * getBufferPercentage()) / 100;
+		return bufferedTime;
+	}
+
+
+	private void setupCallbacks() {
+
+		mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+
+			@Override
+			public boolean onError(MediaPlayer mp, int what, int extra) {
+				mVideoView.stopPlayback();
+				mCurrentPlaybackState = PlaybackState.STATE_NONE;
+				return false;
+			}
+		});
+
+		mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				if (mCurrentPlaybackState == PlaybackState.STATE_PLAYING) {
+					mVideoView.start();
+				}
+			}
+		});
+
+		mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				mCurrentPlaybackState = PlaybackState.STATE_NONE;
+			}
+		});
+	}
+
+
+	public void setCurrentItem(int currentItem) {
+		Log.v(TAG, "setCurrentItem: " + currentItem);
+		this.mCurrentItem = currentItem;
+	}
+
+
+	public void updateMetadata() {
+		Log.i(TAG, "updateMetadata: getCurrentItem" + getCurrentItem());
+		Movie movie = mItems.get(getCurrentItem());
+		mDuration = Utils.getDuration(movie.getVideoUrl());
+		updateMetadata(movie);
+	}
+
+	public void updateMetadata(Movie movie) {
+		final MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
+
+		String title = movie.getTitle().replace("_", " -");
+
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_MEDIA_ID, Long.toString(movie.getId()));
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title);
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, movie.getStudio());
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION, movie.getDescription());
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, movie.getCardImageUrl());
+		metadataBuilder.putLong(MediaMetadata.METADATA_KEY_DURATION, mDuration);
+
+		// And at minimum the title and artist for legacy support
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
+		metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, movie.getStudio());
+
+		Glide.with(mActivity)
+				.load(Uri.parse(movie.getCardImageUrl()))
+				.asBitmap()
+				.into(new SimpleTarget<Bitmap>(500, 500) {
+					@Override
+					public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+
+						metadataBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
+						mSession.setMetadata(metadataBuilder.build());
+					}
+				});
+	}
 
 	public void playPause(boolean doPlay) {
 
@@ -204,154 +351,12 @@ public class PlaybackController {
 //		mSession.setPlaybackState(stateBuilder.build());
 //	}
 
-	public void updateMetadata() {
-		Log.i(TAG, "updateMetadata: getCurrentItem" + getCurrentItem());
-		Movie movie = mItems.get(getCurrentItem());
-		mDuration = Utils.getDuration(movie.getVideoUrl());
-		updateMetadata(movie);
-	}
 
-	public void updateMetadata(Movie movie) {
-		final MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
-
-		String title = movie.getTitle().replace("_", " -");
-
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_MEDIA_ID, Long.toString(movie.getId()));
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title);
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, movie.getStudio());
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION, movie.getDescription());
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI, movie.getCardImageUrl());
-		metadataBuilder.putLong(MediaMetadata.METADATA_KEY_DURATION, mDuration);
-
-		// And at minimum the title and artist for legacy support
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
-		metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, movie.getStudio());
-
-		Glide.with(mActivity)
-				.load(Uri.parse(movie.getCardImageUrl()))
-				.asBitmap()
-				.into(new SimpleTarget<Bitmap>(500, 500) {
-					@Override
-					public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-
-						metadataBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
-						mSession.setMetadata(metadataBuilder.build());
-					}
-				});
-	}
 
 	public void setCurrentPlaybackState(int currentPlaybackState) {
 		this.mCurrentPlaybackState = currentPlaybackState;
 	}
 
-	public int calcBufferedTime(int currentTime) {
-		int bufferedTime;
-		bufferedTime = currentTime + (int) ((mDuration - currentTime) * getBufferPercentage()) / 100;
-		return bufferedTime;
-	}
-
-
-	private void updatePlaybackState() {
-		PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
-				.setActions(getAvailableActions());
-		int state = PlaybackState.STATE_PLAYING;
-		if (mCurrentPlaybackState == PlaybackState.STATE_PAUSED || mCurrentPlaybackState == PlaybackState.STATE_NONE) {
-			state = PlaybackState.STATE_PAUSED;
-		}
-		stateBuilder.setState(state, getCurrentPosition(), 1.0f);
-		mSession.setPlaybackState(stateBuilder.build());
-	}
-
-
-
-	private long getAvailableActions() {
-		long actions = PlaybackState.ACTION_PLAY |
-				PlaybackState.ACTION_PAUSE |
-				PlaybackState.ACTION_PLAY_PAUSE |
-				PlaybackState.ACTION_REWIND |
-				PlaybackState.ACTION_FAST_FORWARD |
-				PlaybackState.ACTION_SKIP_TO_PREVIOUS |
-				PlaybackState.ACTION_SKIP_TO_NEXT |
-				PlaybackState.ACTION_PLAY_FROM_MEDIA_ID |
-				PlaybackState.ACTION_PLAY_FROM_SEARCH;
-		return actions;
-	}
-
-	private void setupCallbacks() {
-
-		mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-
-			@Override
-			public boolean onError(MediaPlayer mp, int what, int extra) {
-				mVideoView.stopPlayback();
-				mCurrentPlaybackState = PlaybackState.STATE_NONE;
-				return false;
-			}
-		});
-
-		mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-			@Override
-			public void onPrepared(MediaPlayer mp) {
-				if (mCurrentPlaybackState == PlaybackState.STATE_PLAYING) {
-					mVideoView.start();
-				}
-			}
-		});
-
-		mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				mCurrentPlaybackState = PlaybackState.STATE_NONE;
-			}
-		});
-	}
-
-	public void setPosition(int position) {
-		if (position > mDuration) {
-			Log.d(TAG, "position: " + position + ", mDuration: " + mDuration);
-			mPosition = (int) mDuration;
-		} else if (position < 0) {
-			mPosition = 0;
-			mStartTimeMillis = System.currentTimeMillis();
-		} else {
-			mPosition = position;
-		}
-		mStartTimeMillis = System.currentTimeMillis();
-		Log.d(TAG, "position set to " + mPosition);
-	}
-
-	public int getCurrentPosition() {
-		return mVideoView.getCurrentPosition();
-	}
-
-	public void setVideoPath(String videoUrl) {
-		setPosition(0);
-		mVideoView.setVideoPath(videoUrl);
-		mStartTimeMillis = 0;
-		mDuration = Utils.getDuration(videoUrl);
-	}
-
-	public int getBufferPercentage() {
-		return mVideoView.getBufferPercentage();
-	}
-
-	public void setVideoView (VideoView videoView) {
-		mVideoView = videoView;
-
-		/* Callbacks for mVideoView */
-		setupCallbacks();
-
-	}
-
-	public void setMovie (Movie movie) {
-		 Log.v(TAG, "setMovie: " + movie.toString());
-		mVideoView.setVideoPath(movie.getVideoUrl());
-	}
-
-	public void setCurrentItem(int currentItem) {
-		Log.v(TAG, "setCurrentItem: " + currentItem);
-		this.mCurrentItem = currentItem;
-	}
 
 	public int getCurrentItem() {
 		return mCurrentItem;
