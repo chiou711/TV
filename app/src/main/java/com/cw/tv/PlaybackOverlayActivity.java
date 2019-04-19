@@ -13,10 +13,12 @@ public class PlaybackOverlayActivity extends Activity {
 	private VideoView mVideoView;
 
 	private LeanbackPlaybackState mPlaybackState = LeanbackPlaybackState.IDLE;
-
+	private PlaybackController mPlaybackController;
 	private int mPosition = 0;
 	private long mStartTimeMillis;
 	private long mDuration = -1;
+	private Movie mSelectedMovie;
+	private int mCurrentItem;
 
 	/*
 	 * List of various states that we can be in
@@ -28,8 +30,18 @@ public class PlaybackOverlayActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_playback_overlay);
+//		setContentView(R.layout.activity_playback_overlay);
 
+		mPlaybackController = new PlaybackController(this);
+
+		mSelectedMovie = (Movie) getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+		mCurrentItem = (int) mSelectedMovie.getId() - 1;
+		mPlaybackController.setCurrentItem(mCurrentItem);
+
+		setContentView(R.layout.activity_playback_overlay);
+		mVideoView = (VideoView) findViewById(R.id.videoView);
+		mPlaybackController.setVideoView(mVideoView);
+		mPlaybackController.setMovie(mSelectedMovie); // it must after video view setting
 		loadViews();
 	}
 
@@ -46,10 +58,12 @@ public class PlaybackOverlayActivity extends Activity {
 		mVideoView.setFocusable(false);
 		mVideoView.setFocusableInTouchMode(false);
 
-		Movie movie = (Movie) getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+//		Movie movie = (Movie) getIntent().getSerializableExtra(DetailsActivity.MOVIE);
 		//todo ??? temp
-		movie.setVideoUrl("http://commondatastorage.googleapis.com/android-tv/Sample%20videos/Zeitgeist/Zeitgeist%202010_%20Year%20in%20Review.mp4");
-		setVideoPath(movie.getVideoUrl());
+		//movie.setVideoUrl("http://commondatastorage.googleapis.com/android-tv/Sample%20videos/Zeitgeist/Zeitgeist%202010_%20Year%20in%20Review.mp4");
+//		setVideoPath(movie.getVideoUrl());
+
+		mPlaybackController.setVideoPath(mSelectedMovie.getVideoUrl());
 
 	}
 
@@ -150,5 +164,9 @@ public class PlaybackOverlayActivity extends Activity {
 
 	public int getPosition() {
 		return mPosition;
+	}
+
+	public PlaybackController getPlaybackController() {
+		return mPlaybackController;
 	}
 }

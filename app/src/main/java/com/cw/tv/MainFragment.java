@@ -18,6 +18,8 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainFragment extends BrowseFragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
 	private ArrayObjectAdapter mRowsAdapter;
@@ -25,6 +27,8 @@ public class MainFragment extends BrowseFragment {
 	private static final int GRID_ITEM_HEIGHT = 200;
 	private static SimpleBackgroundManager simpleBackgroundManager = null;
 	private static PicassoBackgroundManager picassoBackgroundManager = null;
+	ArrayList<Movie> mItems = MovieProvider.getMovieItems();
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.i(TAG, "onActivityCreated");
@@ -77,17 +81,21 @@ public class MainFragment extends BrowseFragment {
 //			cardRowAdapter.add(movie);
 //		}
 
-		for(int i=0; i<10; i++) {
-			Movie movie = new Movie();
-			if(i%3 == 0) {
-				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
-			} else if (i%3 == 1) {
-				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02630.jpg");
-			} else {
-				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02529.jpg");
-			}
-			movie.setTitle("title" + i);
-			movie.setStudio("studio" + i);
+//		for(int i=0; i<10; i++) {
+//			Movie movie = new Movie();
+//			if(i%3 == 0) {
+//				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
+//			} else if (i%3 == 1) {
+//				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02630.jpg");
+//			} else {
+//				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02529.jpg");
+//			}
+//			movie.setTitle("title" + i);
+//			movie.setStudio("studio" + i);
+//			cardRowAdapter.add(movie);
+//		}
+
+		for (Movie movie : mItems) {
 			cardRowAdapter.add(movie);
 		}
 
@@ -123,6 +131,7 @@ public class MainFragment extends BrowseFragment {
 		public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
 		                          RowPresenter.ViewHolder rowViewHolder, Row row) {
 			// each time the item is clicked, code inside here will be executed.
+			Log.d(TAG, "onItemClicked: item = " + item.toString());
 			if (item instanceof Movie) {
 				Movie movie = (Movie) item;
 				Log.d(TAG, "Item: " + item.toString());

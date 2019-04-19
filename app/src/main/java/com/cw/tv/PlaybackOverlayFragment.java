@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadata;
+import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,6 +66,10 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 	private static final int CARD_WIDTH = 200;
 	private static final int CARD_HEIGHT = 240;
 	private static Context sContext;
+	private MediaController mMediaController;
+	private MediaController.Callback mMediaControllerCallback = new MediaControllerCallback();
+	private PlaybackController mPlaybackController;
+	private PlaybackOverlayActivity activity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +78,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 		sContext = getActivity();
 		mHandler = new Handler();
 		mSelectedMovie = (Movie) getActivity().getIntent().getSerializableExtra(DetailsActivity.MOVIE);
-
+		activity = (PlaybackOverlayActivity) getContext();// Activity();
+		mPlaybackController = activity.getPlaybackController();
 		setBackgroundType(PlaybackOverlayFragment.BG_LIGHT);
 		setFadingEnabled(true);
 
@@ -100,50 +107,74 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 		addOtherRows();
 
 		/* onClick */
+//		playbackControlsRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
+//			public void onActionClicked(Action action) {
+//				if (action.getId() == mPlayPauseAction.getId()) {
+//					/* PlayPause action */
+//					togglePlayback(mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.PLAY);
+//				} else if (action.getId() == mSkipNextAction.getId()) {
+//					/* SkipNext action */
+//					next(mCurrentPlaybackState == PlaybackState.STATE_PLAYING);
+//				} else if (action.getId() == mSkipPreviousAction.getId()) {
+//					/* SkipPrevious action */
+//					prev(mCurrentPlaybackState == PlaybackState.STATE_PLAYING);
+//				} else if (action.getId() == mFastForwardAction.getId()) {
+//					/* FastForward action  */
+//					fastForward();
+//				} else if (action.getId() == mRewindAction.getId()) {
+//					/* Rewind action */
+//					rewind();
+//				}
+//				if (action instanceof PlaybackControlsRow.MultiAction) {
+//					/* Following action is subclass of MultiAction
+//					 * - PlayPauseAction
+//					 * - FastForwardAction
+//					 * - RewindAction
+//					 * - ThumbsAction
+//					 * - RepeatAction
+//					 * - ShuffleAction
+//					 * - HighQualityAction
+//					 * - ClosedCaptioningAction
+//					 */
+//					notifyChanged(action);
+//				}
+//
+//				/* Change icon */
+//				if (action instanceof PlaybackControlsRow.ThumbsUpAction ||
+//						action instanceof PlaybackControlsRow.ThumbsDownAction ||
+//						action instanceof PlaybackControlsRow.RepeatAction ||
+//						action instanceof PlaybackControlsRow.ShuffleAction ||
+//						action instanceof PlaybackControlsRow.HighQualityAction ||
+//						action instanceof PlaybackControlsRow.ClosedCaptioningAction) {
+//					((PlaybackControlsRow.MultiAction) action).nextIndex();
+//				}
+//			}
+//		});
+
 		playbackControlsRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
 			public void onActionClicked(Action action) {
 				if (action.getId() == mPlayPauseAction.getId()) {
 					/* PlayPause action */
-					togglePlayback(mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.PLAY);
+					if (mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.PLAY) {
+						mMediaController.getTransportControls().play();
+					} else if (mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.PAUSE) {
+						mMediaController.getTransportControls().pause();
+					}
 				} else if (action.getId() == mSkipNextAction.getId()) {
 					/* SkipNext action */
-					next(mCurrentPlaybackState == PlaybackState.STATE_PLAYING);
+					mMediaController.getTransportControls().skipToNext();
 				} else if (action.getId() == mSkipPreviousAction.getId()) {
 					/* SkipPrevious action */
-					prev(mCurrentPlaybackState == PlaybackState.STATE_PLAYING);
+					mMediaController.getTransportControls().skipToPrevious();
 				} else if (action.getId() == mFastForwardAction.getId()) {
 					/* FastForward action  */
-					fastForward();
+					mMediaController.getTransportControls().fastForward();
 				} else if (action.getId() == mRewindAction.getId()) {
 					/* Rewind action */
-					rewind();
-				}
-				if (action instanceof PlaybackControlsRow.MultiAction) {
-					/* Following action is subclass of MultiAction
-					 * - PlayPauseAction
-					 * - FastForwardAction
-					 * - RewindAction
-					 * - ThumbsAction
-					 * - RepeatAction
-					 * - ShuffleAction
-					 * - HighQualityAction
-					 * - ClosedCaptioningAction
-					 */
-					notifyChanged(action);
-				}
-
-				/* Change icon */
-				if (action instanceof PlaybackControlsRow.ThumbsUpAction ||
-						action instanceof PlaybackControlsRow.ThumbsDownAction ||
-						action instanceof PlaybackControlsRow.RepeatAction ||
-						action instanceof PlaybackControlsRow.ShuffleAction ||
-						action instanceof PlaybackControlsRow.HighQualityAction ||
-						action instanceof PlaybackControlsRow.ClosedCaptioningAction) {
-					((PlaybackControlsRow.MultiAction) action).nextIndex();
+					mMediaController.getTransportControls().rewind();
 				}
 			}
 		});
-
 		setAdapter(mRowsAdapter);
 	}
 
@@ -405,4 +436,101 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 		mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 	}
 
+	protected void updateVideoImage(String url) {
+		try {
+			URI uri = new URI(url);
+			updateVideoImage(uri);
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+		}
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		mMediaController = getActivity().getMediaController();
+		Log.d(TAG, "register callback of mediaController");
+		if(mMediaController == null){
+			Log.e(TAG, "mMediaController is null");
+		}
+
+		mMediaController.registerCallback(mMediaControllerCallback);
+
+	}
+
+	@Override
+	public void onDetach() {
+		if (mMediaController != null) {
+			Log.d(TAG, "unregister callback of mediaController");
+			mMediaController.unregisterCallback(mMediaControllerCallback);
+		}
+		super.onDetach();
+	}
+
+	private class MediaControllerCallback extends MediaController.Callback {
+		@Override
+		public void onPlaybackStateChanged(final PlaybackState state) {
+			Log.d(TAG, "playback state changed: " + state.toString());
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					if (state.getState() == PlaybackState.STATE_PLAYING) {
+						mPlaybackController.setCurrentPlaybackState(PlaybackState.STATE_PLAYING);
+						startProgressAutomation();
+						// setFadingEnabled(false);
+						mPlayPauseAction.setIndex(PlaybackControlsRow.PlayPauseAction.PAUSE);
+						mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlaybackControlsRow.PlayPauseAction.PAUSE));
+						notifyChanged(mPlayPauseAction);
+					} else if (state.getState() == PlaybackState.STATE_PAUSED) {
+						mPlaybackController.setCurrentPlaybackState(PlaybackState.STATE_PAUSED);
+						// setFadingEnabled(false);
+						mPlayPauseAction.setIndex(PlaybackControlsRow.PlayPauseAction.PLAY);
+						mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlaybackControlsRow.PlayPauseAction.PLAY));
+						notifyChanged(mPlayPauseAction);
+					}
+
+					int currentTime = (int) state.getPosition();
+					mPlaybackControlsRow.setCurrentTime(currentTime);
+					// mPlaybackControlsRow.setBufferedProgress(currentTime + SIMULATED_BUFFERED_TIME);
+					mPlaybackControlsRow.setBufferedProgress(mPlaybackController.calcBufferedTime(currentTime));
+
+				}
+			});
+		}
+
+
+		@Override
+		public void onMetadataChanged(final MediaMetadata metadata) {
+			Log.d(TAG, "received update of media metadata");
+			updateMovieView(
+					metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE),
+					metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE),
+					metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI),
+					metadata.getLong(MediaMetadata.METADATA_KEY_DURATION)
+			);
+		}
+	}
+
+	private void updateMovieView(String title, String studio, String cardImageUrl, long duration) {
+		Log.d(TAG, "updateMovieView");
+
+		if (mPlaybackControlsRow.getItem() != null) {
+			Movie item = (Movie) mPlaybackControlsRow.getItem();
+			item.setTitle(title);
+			item.setStudio(studio);
+		} else {
+			Log.e(TAG, "mPlaybackControlsRow.getItem is null!");
+		}
+		mPlaybackControlsRow.setTotalTime((int) duration);
+		mPlaybackControlsRow.setCurrentTime(0);
+		mPlaybackControlsRow.setBufferedProgress(0);
+		mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
+
+		// Show the video card image if there is enough room in the UI for it.
+		// If you have many primary actions, you may not have enough room.
+		if (SHOW_IMAGE) {
+			mPlaybackControlsRowTarget = new PicassoPlaybackControlsRowTarget(mPlaybackControlsRow);
+			updateVideoImage(cardImageUrl);
+		}
+	}
 }
