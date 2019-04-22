@@ -1,12 +1,12 @@
 package com.cw.tv;
 
-import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.VideoView;
 
-public class PlaybackOverlayActivity extends Activity {
+public class PlaybackOverlayActivity extends FragmentActivity {
 
 	private static final String TAG = PlaybackOverlayActivity.class.getSimpleName();
 
@@ -30,18 +30,19 @@ public class PlaybackOverlayActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_playback_overlay);
-
-		mPlaybackController = new PlaybackController(this);
 
 		mSelectedMovie = (Movie) getIntent().getSerializableExtra(DetailsActivity.MOVIE);
 		mCurrentItem = (int) mSelectedMovie.getId() - 1;
-		mPlaybackController.setCurrentItem(mCurrentItem);
 
+		mPlaybackController = new PlaybackController(this);
 		setContentView(R.layout.activity_playback_overlay);
+
 		mVideoView = (VideoView) findViewById(R.id.videoView);
+
+		mPlaybackController.setCurrentItem(mCurrentItem);
 		mPlaybackController.setVideoView(mVideoView);
 		mPlaybackController.setMovie(mSelectedMovie); // it must after video view setting
+
 		loadViews();
 	}
 
@@ -55,16 +56,20 @@ public class PlaybackOverlayActivity extends Activity {
 
 	private void loadViews() {
 		mVideoView = (VideoView) findViewById(R.id.videoView);
-		mVideoView.setFocusable(false);
-		mVideoView.setFocusableInTouchMode(false);
+		// For fixing an issue which VideoView get focus by default, making control fragment lost focus on activity starts
+		mVideoView.post(new Runnable() {
+			@Override
+			public void run() {
+				mVideoView.setFocusable(false);
+				mVideoView.setFocusableInTouchMode(false);
+			}
+		});
 
 //		Movie movie = (Movie) getIntent().getSerializableExtra(DetailsActivity.MOVIE);
-		//todo ??? temp
 		//movie.setVideoUrl("http://commondatastorage.googleapis.com/android-tv/Sample%20videos/Zeitgeist/Zeitgeist%202010_%20Year%20in%20Review.mp4");
 //		setVideoPath(movie.getVideoUrl());
 
 		mPlaybackController.setVideoPath(mSelectedMovie.getVideoUrl());
-
 	}
 
 	public void setVideoPath(String videoUrl) {
@@ -169,4 +174,5 @@ public class PlaybackOverlayActivity extends Activity {
 	public PlaybackController getPlaybackController() {
 		return mPlaybackController;
 	}
+
 }

@@ -39,7 +39,7 @@ import java.util.ArrayList;
 /**
  * Created by corochann on 7/7/2015.
  */
-public class PlaybackOverlayFragment extends android.support.v17.leanback.app.PlaybackFragment {
+public class PlaybackOverlayFragment extends android.support.v17.leanback.app.PlaybackSupportFragment {
 
 	private static final String TAG = PlaybackOverlayFragment.class.getSimpleName();
 
@@ -75,7 +75,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 	private static final int CARD_HEIGHT = 240;
 	private static Context sContext;
 	private MediaController mMediaController;
-	private MediaController.Callback mMediaControllerCallback = new MediaControllerCallback();
+	private MediaControllerCallback mMediaControllerCallback = new MediaControllerCallback();
 
 	private PlaybackController mPlaybackController;
 	private PlaybackOverlayActivity activity;
@@ -114,6 +114,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.d(TAG, "onActivityCreated");
+		System.out.println("PlaybackOverlayFragment / _onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
 
 	}
@@ -232,9 +233,9 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 			public void onActionClicked(Action action) {
 				if (action.getId() == mPlayPauseAction.getId()) {
 					/* PlayPause action */
-					if (mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.PLAY) {
+					if (mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.INDEX_PLAY) {
 						mMediaController.getTransportControls().play();
-					} else if (mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.PAUSE) {
+					} else if (mPlayPauseAction.getIndex() == PlaybackControlsRow.PlayPauseAction.INDEX_PAUSE) {
 						mMediaController.getTransportControls().pause();
 					}
 				} else if (action.getId() == mSkipNextAction.getId()) {
@@ -403,9 +404,9 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 		} else {
 			Log.e(TAG, "mPlaybackControlsRow.getItem is null!");
 		}
-		mPlaybackControlsRow.setTotalTime((int) duration);
-		mPlaybackControlsRow.setCurrentTime(0);
-		mPlaybackControlsRow.setBufferedProgress(0);
+		mPlaybackControlsRow.setDuration(duration);
+		mPlaybackControlsRow.setCurrentPosition(0);
+		mPlaybackControlsRow.setBufferedPosition(0);
 		mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 
 		// Show the video card image if there is enough room in the UI for it.
@@ -419,7 +420,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
 	/* For cardImage loading to playbackRow */
 	public class PicassoPlaybackControlsRowTarget implements Target {
-		PlaybackControlsRow mPlaybackControlsRow;
+		//PlaybackControlsRow mPlaybackControlsRow;
 
 		public PicassoPlaybackControlsRowTarget(PlaybackControlsRow playbackControlsRow) {
 			mPlaybackControlsRow = playbackControlsRow;
