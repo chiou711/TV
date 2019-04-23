@@ -13,10 +13,12 @@ import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,8 @@ public class MainFragment extends BrowseFragment {
 	private static SimpleBackgroundManager simpleBackgroundManager = null;
 	private static PicassoBackgroundManager picassoBackgroundManager = null;
 	ArrayList<Movie> mItems = MovieProvider.getMovieItems();
+	private static final String GRID_STRING_RECOMMENDATION = "Recommendation";
+	private static int recommendationCounter = 0;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ public class MainFragment extends BrowseFragment {
 //		gridRowAdapter.add("ITEM 1");
 		gridRowAdapter.add("ErrorFragment");
 		gridRowAdapter.add("GuidedStepFragment");
-		gridRowAdapter.add("ITEM 3");
+		gridRowAdapter.add(GRID_STRING_RECOMMENDATION);
 		mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
 
 		/* CardPresenter */
@@ -146,6 +150,18 @@ public class MainFragment extends BrowseFragment {
 				} else if (item == "GuidedStepFragment") {
 					Intent intent = new Intent(getActivity(), GuidedStepActivity.class);
 					startActivity(intent);
+				} else if (item == GRID_STRING_RECOMMENDATION) {
+					//https://developer.android.com/training/tv/discovery/recommendations-row.html
+					//Note:
+					// Use the APIs described here for making recommendations in apps running in Android versions up to and including Android 7.1 (API level 25) only.
+					// To supply recommendations for apps running in Android 8.0 (API level 26) and later, your app must use recommendations channels.
+					Log.v(TAG, "onClick recommendation. counter " + recommendationCounter);
+					RecommendationFactory recommendationFactory = new RecommendationFactory(getActivity().getApplicationContext());
+					Movie movie = mItems.get(recommendationCounter % mItems.size());
+//					Movie movie = mItems.get(2);
+					recommendationFactory.recommend(recommendationCounter, movie, NotificationCompat.PRIORITY_HIGH);
+					Toast.makeText(getActivity(), "Recommendation sent (item " + recommendationCounter +")", Toast.LENGTH_SHORT).show();
+					recommendationCounter++;
 				}
 			}
 		}
