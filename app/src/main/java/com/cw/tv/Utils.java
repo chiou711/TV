@@ -32,6 +32,7 @@ package com.cw.tv;
 
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
@@ -118,5 +119,10 @@ public class Utils {
             mmr.setDataSource(videoUrl);
         }
         return Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+    }
+
+    public static boolean hasPermission(final Context context, final String permission) {
+        return PackageManager.PERMISSION_GRANTED == context.getPackageManager().checkPermission(
+                permission, context.getPackageName());
     }
 }

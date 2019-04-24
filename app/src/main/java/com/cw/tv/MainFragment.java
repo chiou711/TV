@@ -3,7 +3,7 @@ package com.cw.tv;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
@@ -16,13 +16,14 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainFragment extends BrowseFragment {
+public class MainFragment extends BrowseSupportFragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
 	private ArrayObjectAdapter mRowsAdapter;
 	private static final int GRID_ITEM_WIDTH = 300;
@@ -112,6 +113,14 @@ public class MainFragment extends BrowseFragment {
 	private void setupEventListeners() {
 		setOnItemViewSelectedListener(new ItemViewSelectedListener());
 		setOnItemViewClickedListener(new ItemViewClickedListener());
+		// Existence of this method make In-app search icon visible
+		setOnSearchClickedListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(getActivity(), SearchActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
@@ -128,7 +137,11 @@ public class MainFragment extends BrowseFragment {
 				picassoBackgroundManager.updateBackgroundWithDelay(((Movie) item).getCardImageUrl());
 			}
 		}
+
+
 	}
+
+
 
 	private final class ItemViewClickedListener implements OnItemViewClickedListener {
 		@Override

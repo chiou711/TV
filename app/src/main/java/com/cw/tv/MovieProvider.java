@@ -20,7 +20,7 @@ public class MovieProvider {
 
             Movie movie1 = new Movie();
             movie1.setId(1);
-            movie1.setTitle("Title1");
+            movie1.setTitle("search 2010");
             movie1.setStudio("studio1");
             movie1.setDescription("description1");
             movie1.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
@@ -31,7 +31,7 @@ public class MovieProvider {
 
             Movie movie2 = new Movie();
             movie2.setId(2);
-            movie2.setTitle("Title2");
+            movie2.setTitle("voice search");
             movie2.setStudio("studio2");
             movie2.setDescription("description2");
             movie2.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02630.jpg");
@@ -42,7 +42,7 @@ public class MovieProvider {
 
             Movie movie3 = new Movie();
             movie3.setId(3);
-            movie3.setTitle("Title3");
+            movie3.setTitle("undersea");
             movie3.setStudio("studio3");
             movie3.setDescription("description3");
             movie3.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02529.jpg");
