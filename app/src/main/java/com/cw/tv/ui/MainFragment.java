@@ -2,7 +2,9 @@ package com.cw.tv.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v17.leanback.app.BrowseSupportFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -37,6 +39,8 @@ public class MainFragment extends BrowseSupportFragment {
 	private static PicassoBackgroundManager picassoBackgroundManager = null;
 	ArrayList<Movie> mItems = MovieProvider.getMovieItems();
 	private static final String GRID_STRING_RECOMMENDATION = "Recommendation";
+	private static final String GRID_STRING_SPINNER = "Spinner";
+
 	private static int recommendationCounter = 0;
 
 	@Override
@@ -75,6 +79,7 @@ public class MainFragment extends BrowseSupportFragment {
 		gridRowAdapter.add("ErrorFragment");
 		gridRowAdapter.add("GuidedStepFragment");
 		gridRowAdapter.add(GRID_STRING_RECOMMENDATION);
+		gridRowAdapter.add(GRID_STRING_SPINNER);
 		mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
 
 		/* CardPresenter */
@@ -180,7 +185,11 @@ public class MainFragment extends BrowseSupportFragment {
 					recommendationFactory.recommend(recommendationCounter, movie, NotificationCompat.PRIORITY_HIGH);
 					Toast.makeText(getActivity(), "Recommendation sent (item " + recommendationCounter +")", Toast.LENGTH_SHORT).show();
 					recommendationCounter++;
+				} else if (item == GRID_STRING_SPINNER) {
+					// Show SpinnerFragment, while doing some is executed.
+					new ShowSpinnerTask().execute();
 				}
+
 			}
 		}
 	}
@@ -207,6 +216,30 @@ public class MainFragment extends BrowseSupportFragment {
 		@Override
 		public void onUnbindViewHolder(ViewHolder viewHolder) {
 
+		}
+	}
+
+	private class ShowSpinnerTask extends AsyncTask<Void, Void, Void> {
+
+		SpinnerFragment mSpinnerFragment;
+
+		@Override
+		protected void onPreExecute() {
+			mSpinnerFragment = new SpinnerFragment();
+			getFragmentManager().beginTransaction().add(R.id.main_browse_fragment, mSpinnerFragment).commit();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// Do some background process here.
+			// It just waits 5 sec in this Tutorial
+			SystemClock.sleep(5000);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
 		}
 	}
 
