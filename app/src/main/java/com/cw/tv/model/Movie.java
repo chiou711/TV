@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.model;
 
 /*
  * Copyright (C) 2014 The Android Open Source Project
@@ -14,8 +14,6 @@ package com.cw.tv;
  * the License.
  */
 
-
-import android.util.Log;
 
 import java.io.Serializable;
 import java.net.URI;

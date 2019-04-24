@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cw.tv;
+package com.cw.tv.common;
 
 /*
  * Copyright (C) 2014 The Android Open Source Project

@@ -1,15 +1,17 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public class SearchActivity extends FragmentActivity {
+import com.cw.tv.R;
+
+public class MainActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search);
+		setContentView(R.layout.activity_main);
 	}
 
 	@Override

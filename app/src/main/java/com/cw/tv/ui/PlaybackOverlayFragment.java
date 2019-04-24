@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,6 +30,10 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 
+import com.cw.tv.common.PlaybackController;
+import com.cw.tv.common.Utils;
+import com.cw.tv.data.MovieProvider;
+import com.cw.tv.model.Movie;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 

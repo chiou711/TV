@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.cw.tv.R;
 
 import java.util.List;
 

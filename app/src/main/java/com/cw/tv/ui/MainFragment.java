@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cw.tv.R;
+import com.cw.tv.data.MovieProvider;
+import com.cw.tv.model.Movie;
+import com.cw.tv.recommendation.RecommendationFactory;
 
 import java.util.ArrayList;
 

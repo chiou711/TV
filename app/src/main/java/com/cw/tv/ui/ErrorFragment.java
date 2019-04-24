@@ -1,8 +1,10 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.cw.tv.R;
 
 /**
  * Modified from AOSP sample code by corochann on 7/7/2015.

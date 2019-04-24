@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.Presenter;

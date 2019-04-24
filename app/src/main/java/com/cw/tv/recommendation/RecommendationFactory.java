@@ -1,6 +1,5 @@
-package com.cw.tv;
+package com.cw.tv.recommendation;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +10,9 @@ import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.cw.tv.ui.DetailsActivity;
+import com.cw.tv.R;
+import com.cw.tv.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.net.URI;

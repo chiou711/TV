@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.common;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -15,6 +15,8 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.cw.tv.model.Movie;
+import com.cw.tv.data.MovieProvider;
 
 import java.util.ArrayList;
 

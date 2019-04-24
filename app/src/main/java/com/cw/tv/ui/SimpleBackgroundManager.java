@@ -1,16 +1,11 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.util.DisplayMetrics;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URI;
+import com.cw.tv.R;
 
 
 /**

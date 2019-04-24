@@ -1,8 +1,7 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,11 +16,14 @@ import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v17.leanback.widget.SpeechRecognitionCallback;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.cw.tv.common.Utils;
+import com.cw.tv.data.MovieProvider;
+import com.cw.tv.model.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,17 +55,17 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchSuppo
 		if (!Utils.hasPermission(getActivity(), Manifest.permission.RECORD_AUDIO)) {
 			// SpeechRecognitionCallback is not required and if not provided recognition will be handled
 			// using internal speech recognizer, in which case you must have RECORD_AUDIO permission
-			setSpeechRecognitionCallback(new SpeechRecognitionCallback() {
-				@Override
-				public void recognizeSpeech() {
-					Log.v(TAG, "recognizeSpeech");
-					try {
+//			setSpeechRecognitionCallback(new SpeechRecognitionCallback() {
+//				@Override
+//				public void recognizeSpeech() {
+//					Log.v(TAG, "recognizeSpeech");
+//					try {
 						startActivityForResult(getRecognizerIntent(), REQUEST_SPEECH);
-					} catch (ActivityNotFoundException e) {
-						Log.e(TAG, "Cannot find activity for speech recognizer", e);
-					}
-				}
-			});
+//					} catch (ActivityNotFoundException e) {
+//						Log.e(TAG, "Cannot find activity for speech recognizer", e);
+//					}
+//				}
+//			});
 		}
 
 		mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());

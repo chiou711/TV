@@ -1,5 +1,7 @@
-package com.cw.tv;
+package com.cw.tv.data;
 
+
+import com.cw.tv.model.Movie;
 
 import java.util.ArrayList;
 

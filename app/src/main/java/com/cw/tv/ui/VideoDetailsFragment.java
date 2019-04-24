@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +17,8 @@ import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.util.Log;
 
+import com.cw.tv.common.Utils;
+import com.cw.tv.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;

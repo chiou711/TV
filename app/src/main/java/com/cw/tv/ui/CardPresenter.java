@@ -1,4 +1,4 @@
-package com.cw.tv;
+package com.cw.tv.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cw.tv.R;
+import com.cw.tv.common.Utils;
+import com.cw.tv.model.Movie;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
