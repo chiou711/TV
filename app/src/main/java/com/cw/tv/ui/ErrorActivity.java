@@ -1,14 +1,15 @@
 package com.cw.tv.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.cw.tv.R;
 
+import androidx.fragment.app.FragmentActivity;
+
 /**
  * Created by corochann on 7/7/2015.
  */
-public class ErrorActivity extends Activity {
+public class ErrorActivity extends FragmentActivity {
 
 	private static final String TAG = ErrorActivity.class.getSimpleName();
 

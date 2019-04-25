@@ -10,7 +10,7 @@ import com.cw.tv.R;
  * Modified from AOSP sample code by corochann on 7/7/2015.
  * This class demonstrates how to extend ErrorFragment
  */
-public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragment {
+public class ErrorFragment extends androidx.leanback.app.ErrorFragment {
 
 	private static final String TAG = ErrorFragment.class.getSimpleName();
 	private static final boolean TRANSLUCENT = true;

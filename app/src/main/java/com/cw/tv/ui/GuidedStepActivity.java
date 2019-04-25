@@ -3,18 +3,19 @@ package com.cw.tv.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v17.leanback.app.GuidedStepSupportFragment;
-import android.support.v17.leanback.widget.GuidanceStylist;
-import android.support.v17.leanback.widget.GuidedAction;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.cw.tv.R;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.leanback.app.GuidedStepSupportFragment;
+import androidx.leanback.widget.GuidanceStylist;
+import androidx.leanback.widget.GuidedAction;
 
 /**
  * Created by corochann on 24/7/2015.

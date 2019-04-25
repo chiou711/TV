@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v17.leanback.app.BackgroundManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -17,6 +16,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.leanback.app.BackgroundManager;
 
 /**
  * Created by corochann on 3/7/2015.

@@ -2,7 +2,6 @@ package com.cw.tv.ui;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.VideoView;
 
@@ -10,6 +9,8 @@ import com.cw.tv.R;
 import com.cw.tv.common.PlaybackController;
 import com.cw.tv.common.Utils;
 import com.cw.tv.model.Movie;
+
+import androidx.fragment.app.FragmentActivity;
 
 public class PlaybackOverlayActivity extends FragmentActivity {
 

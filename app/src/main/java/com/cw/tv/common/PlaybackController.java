@@ -20,8 +20,6 @@ import com.cw.tv.data.MovieProvider;
 
 import java.util.ArrayList;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class PlaybackController {
 	Activity mActivity;
 	private MediaSession mSession;
@@ -34,7 +32,7 @@ public class PlaybackController {
 	private int mPosition = 0;
 	private int mCurrentItem; // index of current item
 	private static final ArrayList<Movie> mItems =  MovieProvider.getMovieItems(); // new ArrayList<Movie>();
-
+	String TAG = "PlaybackController";
 
 	public PlaybackController(Activity activity) {
 		mActivity = activity;

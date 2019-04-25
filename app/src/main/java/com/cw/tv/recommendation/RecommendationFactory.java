@@ -7,7 +7,6 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.cw.tv.ui.DetailsActivity;
@@ -16,6 +15,8 @@ import com.cw.tv.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.net.URI;
+
+import androidx.core.app.NotificationCompat;
 
 public class RecommendationFactory {
 

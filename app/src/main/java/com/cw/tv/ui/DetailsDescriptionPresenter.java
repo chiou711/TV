@@ -14,9 +14,9 @@
 
 package com.cw.tv.ui;
 
-import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
-
 import com.cw.tv.model.Movie;
+
+import androidx.leanback.widget.AbstractDetailsDescriptionPresenter;
 
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 

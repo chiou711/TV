@@ -11,23 +11,6 @@ import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v17.leanback.widget.Action;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ClassPresenterSelector;
-import android.support.v17.leanback.widget.ControlButtonPresenterSelector;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ImageCardView;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnActionClickedListener;
-import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
-import android.support.v17.leanback.widget.PlaybackControlsRow;
-import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.Row;
-import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 
 import com.cw.tv.common.PlaybackController;
@@ -40,11 +23,29 @@ import com.squareup.picasso.Target;
 import java.net.URI;
 import java.util.ArrayList;
 
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.leanback.app.PlaybackSupportFragment;
+import androidx.leanback.widget.Action;
+import androidx.leanback.widget.ArrayObjectAdapter;
+import androidx.leanback.widget.ClassPresenterSelector;
+import androidx.leanback.widget.ControlButtonPresenterSelector;
+import androidx.leanback.widget.HeaderItem;
+import androidx.leanback.widget.ImageCardView;
+import androidx.leanback.widget.ListRow;
+import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.OnActionClickedListener;
+import androidx.leanback.widget.OnItemViewClickedListener;
+import androidx.leanback.widget.OnItemViewSelectedListener;
+import androidx.leanback.widget.PlaybackControlsRow;
+import androidx.leanback.widget.PlaybackControlsRowPresenter;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.Row;
+import androidx.leanback.widget.RowPresenter;
+
 /**
  * Created by corochann on 7/7/2015.
  */
-public class PlaybackOverlayFragment extends android.support.v17.leanback.app.PlaybackSupportFragment {
-
+public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 	private static final String TAG = PlaybackOverlayFragment.class.getSimpleName();
 
 	private Movie mSelectedMovie;

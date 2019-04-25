@@ -4,17 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v17.leanback.app.DetailsFragment;
-import android.support.v17.leanback.widget.Action;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ClassPresenterSelector;
-import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnActionClickedListener;
-import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
+
 import android.util.Log;
 
 import com.cw.tv.common.Utils;
@@ -22,6 +12,18 @@ import com.cw.tv.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+
+import androidx.leanback.app.DetailsFragment;
+import androidx.leanback.widget.Action;
+import androidx.leanback.widget.ArrayObjectAdapter;
+import androidx.leanback.widget.ClassPresenterSelector;
+import androidx.leanback.widget.DetailsOverviewRow;
+import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import androidx.leanback.widget.HeaderItem;
+import androidx.leanback.widget.ListRow;
+import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.OnActionClickedListener;
+import androidx.leanback.widget.SparseArrayObjectAdapter;
 
 /**
  * Created by corochann on 6/7/2015.

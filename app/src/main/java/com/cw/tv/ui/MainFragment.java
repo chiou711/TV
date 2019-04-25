@@ -1,21 +1,12 @@
 package com.cw.tv.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v17.leanback.app.BrowseSupportFragment;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
-import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.Row;
-import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v4.app.NotificationCompat;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +20,23 @@ import com.cw.tv.model.Movie;
 import com.cw.tv.recommendation.RecommendationFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import androidx.core.app.NotificationCompat;
+import androidx.leanback.app.BrowseSupportFragment;
+import androidx.leanback.widget.ArrayObjectAdapter;
+import androidx.leanback.widget.HeaderItem;
+import androidx.leanback.widget.ListRow;
+import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.OnItemViewClickedListener;
+import androidx.leanback.widget.OnItemViewSelectedListener;
+import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.Row;
+import androidx.leanback.widget.RowPresenter;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 public class MainFragment extends BrowseSupportFragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
@@ -38,20 +46,102 @@ public class MainFragment extends BrowseSupportFragment {
 	private static SimpleBackgroundManager simpleBackgroundManager = null;
 	private static PicassoBackgroundManager picassoBackgroundManager = null;
 	ArrayList<Movie> mItems = MovieProvider.getMovieItems();
+	private static final String GRID_STRING_ERROR_FRAGMENT = "ErrorFragment";
+	private static final String GRID_STRING_GUIDED_STEP_FRAGMENT = "GuidedStepFragment";
 	private static final String GRID_STRING_RECOMMENDATION = "Recommendation";
 	private static final String GRID_STRING_SPINNER = "Spinner";
 
 	private static int recommendationCounter = 0;
+	private static final int VIDEO_ITEM_LOADER_ID = 1;
+	Context context;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.i(TAG, "onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
+
+
 		setupUIElements();
-		loadRows();
+
+		//loadRows();
+		getLoaderManager().initLoader(VIDEO_ITEM_LOADER_ID, null, new MainFragmentLoaderCallbacks());
+
 		setupEventListeners();
-//		simpleBackgroundManager = new SimpleBackgroundManager(getActivity());
+
+		//		simpleBackgroundManager = new SimpleBackgroundManager(getActivity());
 		picassoBackgroundManager = new PicassoBackgroundManager(getActivity());
+		context = getActivity();
+	}
+
+	private class MainFragmentLoaderCallbacks implements LoaderManager.LoaderCallbacks<LinkedHashMap<String, List<Movie>>> {
+		@Override
+		public Loader<LinkedHashMap<String, List<Movie>>> onCreateLoader(int id, Bundle args) {
+			/* Create new Loader */
+			Log.d(TAG, "onCreateLoader");
+			if(id == VIDEO_ITEM_LOADER_ID) {
+				Log.d(TAG, "create VideoItemLoader");
+				return new VideoItemLoader(getActivity());
+			}
+			return null;
+		}
+
+		@Override
+		public void onLoadFinished(Loader<LinkedHashMap<String, List<Movie>>> loader, LinkedHashMap<String, List<Movie>> data) {
+			Log.d(TAG, "VideoItemLoader: onLoadFinished");
+			/* Loader data has prepared. Start updating UI here */
+			switch (loader.getId()) {
+				case VIDEO_ITEM_LOADER_ID:
+					Log.d(TAG, "VideoLists UI update");
+
+					/* Hold data reference to use it for recommendation */
+					mItems = new ArrayList<Movie>();
+
+					mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+
+					int index = 0;
+					/* GridItemPresenter */
+					HeaderItem gridItemPresenterHeader = new HeaderItem(index, "GridItemPresenter");
+					index++;
+
+					GridItemPresenter mGridPresenter = new GridItemPresenter();
+					ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
+					gridRowAdapter.add(GRID_STRING_ERROR_FRAGMENT);
+					gridRowAdapter.add(GRID_STRING_GUIDED_STEP_FRAGMENT);
+					gridRowAdapter.add(GRID_STRING_RECOMMENDATION);
+					gridRowAdapter.add(GRID_STRING_SPINNER);
+					mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
+
+					/* CardPresenter */
+					CardPresenter cardPresenter = new CardPresenter();
+
+					if (null != data) {
+						for (Map.Entry<String, List<Movie>> entry : data.entrySet()) {
+							ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
+							List<Movie> list = entry.getValue();
+
+							for (int j = 0; j < list.size(); j++) {
+								Movie movie = list.get(j);
+								cardRowAdapter.add(movie);
+								mItems.add(movie);           // Add movie reference for recommendation purpose.
+							}
+							HeaderItem header = new HeaderItem(index, entry.getKey());
+							index++;
+							mRowsAdapter.add(new ListRow(header, cardRowAdapter));
+						}
+					} else {
+						Log.e(TAG, "An error occurred fetching videos");
+					}
+					/* Set */
+					setAdapter(mRowsAdapter);
+			}
+		}
+
+		@Override
+		public void onLoaderReset(Loader<LinkedHashMap<String, List<Movie>>> loader) {
+			Log.d(TAG, "VideoItemLoader: onLoadReset");
+			/* When it is called, Loader data is now unavailable due to some reason. */
+
+		}
 	}
 
 	private void setupUIElements() {

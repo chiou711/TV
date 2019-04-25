@@ -1,10 +1,11 @@
 package com.cw.tv.ui;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.cw.tv.R;
+
+import androidx.fragment.app.FragmentActivity;
 
 public class SearchActivity extends FragmentActivity {
 
