@@ -71,6 +71,7 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 	private Runnable mRunnable;
 	private static final int DEFAULT_UPDATE_PERIOD = 1000;
 	private static final int UPDATE_PERIOD = 16;
+	private static final int VIDEO_PLAY_FINISHED_MARGIN = 100; // used to check video playback has finished or not.
 	private static final int SIMULATED_BUFFERED_TIME = 10000;
 	private int mCurrentItem;
 	private ArrayList<Movie> mItems = new ArrayList<Movie>();
@@ -304,10 +305,10 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 	}
 
 	private int getUpdatePeriod() {
-		if (getView() == null || mPlaybackControlsRow.getTotalTime() <= 0 || getView().getWidth() == 0) {
+		if (getView() == null || mPlaybackControlsRow.getDuration() <= 0 || getView().getWidth() == 0) {
 			return DEFAULT_UPDATE_PERIOD;
 		}
-		return Math.max(UPDATE_PERIOD, mPlaybackControlsRow.getTotalTime() / getView().getWidth());
+		return Math.max(UPDATE_PERIOD, (int)mPlaybackControlsRow.getDuration() / getView().getWidth());
 	}
 
 	private void startProgressAutomation() {
@@ -316,17 +317,21 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 				@Override
 				public void run() {
 					int updatePeriod = getUpdatePeriod();
-					int currentTime = mPlaybackControlsRow.getCurrentTime() + updatePeriod;
-					int totalTime = mPlaybackControlsRow.getTotalTime();
-					mPlaybackControlsRow.setCurrentTime(currentTime);
-					mPlaybackControlsRow.setBufferedProgress(currentTime + SIMULATED_BUFFERED_TIME);
+//					long currentTime = mPlaybackControlsRow.getCurrentPosition() + updatePeriod;
+					long currentTime = mPlaybackController.getCurrentPosition();
+					long totalTime = mPlaybackControlsRow.getDuration();
+					mPlaybackControlsRow.setCurrentPosition(currentTime);
+					mPlaybackControlsRow.setBufferedPosition(mPlaybackController.calcBufferedTime((int)currentTime));
 
-					if (totalTime > 0 && totalTime <= currentTime) {
-						stopProgressAutomation();
+					if (totalTime > 0 && totalTime <= currentTime + VIDEO_PLAY_FINISHED_MARGIN) {
+//						stopProgressAutomation();
+						mMediaController.getTransportControls().skipToNext();
 						//next(true);
 					} else {
-						mHandler.postDelayed(this, updatePeriod);
+//						mHandler.postDelayed(this, updatePeriod);
 					}
+
+					mHandler.postDelayed(this, updatePeriod);
 				}
 			};
 			mHandler.postDelayed(mRunnable, getUpdatePeriod());
@@ -493,104 +498,6 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		}
 	}
 
-	private void togglePlayback(boolean playPause) {
-		/* Video control part */
-		((PlaybackOverlayActivity) getActivity()).playPause(playPause);
-
-		/* UI control part */
-		playbackStateChanged();
-	}
-
-
-	public void playbackStateChanged() {
-
-		if (mCurrentPlaybackState != PlaybackState.STATE_PLAYING) {
-			mCurrentPlaybackState = PlaybackState.STATE_PLAYING;
-			startProgressAutomation();
-			setFadingEnabled(true);
-			mPlayPauseAction.setIndex(PlaybackControlsRow.PlayPauseAction.PAUSE);
-			mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlaybackControlsRow.PlayPauseAction.PAUSE));
-			notifyChanged(mPlayPauseAction);
-		} else if (mCurrentPlaybackState != PlaybackState.STATE_PAUSED) {
-			mCurrentPlaybackState = PlaybackState.STATE_PAUSED;
-			stopProgressAutomation();
-			//setFadingEnabled(false); // if set to false, PlaybackcontrolsRow will always be on the screen
-			mPlayPauseAction.setIndex(PlaybackControlsRow.PlayPauseAction.PLAY);
-			mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlaybackControlsRow.PlayPauseAction.PLAY));
-			notifyChanged(mPlayPauseAction);
-		}
-
-		int currentTime = ((PlaybackOverlayActivity) getActivity()).getPosition();
-		mPlaybackControlsRow.setCurrentTime(currentTime);
-		mPlaybackControlsRow.setBufferedProgress(currentTime + SIMULATED_BUFFERED_TIME);
-
-	}
-
-
-
-	private void fastForward() {
-		/* Video control part */
-		((PlaybackOverlayActivity) getActivity()).fastForward();
-
-		/* UI part */
-		int currentTime = ((PlaybackOverlayActivity) getActivity()).getPosition();
-		mPlaybackControlsRow.setCurrentTime(currentTime);
-		mPlaybackControlsRow.setBufferedProgress(currentTime + SIMULATED_BUFFERED_TIME);
-	}
-
-	private void rewind() {
-		/* Video control part */
-		((PlaybackOverlayActivity) getActivity()).rewind();
-
-		/* UI part */
-		int currentTime = ((PlaybackOverlayActivity) getActivity()).getPosition();
-		mPlaybackControlsRow.setCurrentTime(currentTime);
-		mPlaybackControlsRow.setBufferedProgress(currentTime + SIMULATED_BUFFERED_TIME);
-	}
-
-	private void next(boolean autoPlay) {
-		/* Video control part */
-		if (++mCurrentItem >= mItems.size()) { // Current Item is set to next here
-			mCurrentItem = 0;
-		}
-
-		if (autoPlay) {
-			mCurrentPlaybackState = PlaybackState.STATE_PAUSED;
-		}
-
-		Movie movie = mItems.get(mCurrentItem);
-		if (movie != null) {
-			((PlaybackOverlayActivity) getActivity()).setVideoPath(movie.getVideoUrl());
-			((PlaybackOverlayActivity) getActivity()).setPlaybackState(PlaybackOverlayActivity.LeanbackPlaybackState.PAUSED);
-			((PlaybackOverlayActivity) getActivity()).playPause(autoPlay);
-		}
-
-		/* UI part */
-		playbackStateChanged();
-		updatePlaybackRow(mCurrentItem);
-	}
-
-	private void prev(boolean autoPlay) {
-		/* Video control part */
-		if (--mCurrentItem < 0) { // Current Item is set to previous here
-			mCurrentItem = mItems.size() - 1;
-		}
-		if (autoPlay) {
-			mCurrentPlaybackState = PlaybackState.STATE_PAUSED;
-		}
-
-		Movie movie = mItems.get(mCurrentItem);
-		if (movie != null) {
-			((PlaybackOverlayActivity) getActivity()).setVideoPath(movie.getVideoUrl());
-			((PlaybackOverlayActivity) getActivity()).setPlaybackState(PlaybackOverlayActivity.LeanbackPlaybackState.PAUSED);
-			((PlaybackOverlayActivity) getActivity()).playPause(autoPlay);
-		}
-
-		/* UI part */
-		playbackStateChanged();
-		updatePlaybackRow(mCurrentItem);
-	}
-
 	private void updatePlaybackRow(int index) {
 		Log.d(TAG, "updatePlaybackRow");
 		if (mPlaybackControlsRow.getItem() != null) {
@@ -598,15 +505,19 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 			item.setTitle(mItems.get(index).getTitle());
 			item.setStudio(mItems.get(index).getStudio());
 
-			mRowsAdapter.notifyArrayItemRangeChanged(0, 1);
+			mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 			/* total time is necessary to show video playing time progress bar */
 			int duration = (int) Utils.getDuration(mItems.get(mCurrentItem).getVideoUrl());
+			mPlaybackController.setDuration(duration);
 			Log.i(TAG, "videoUrl: " + mItems.get(mCurrentItem).getVideoUrl());
 			Log.i(TAG, "duration = " + duration);
-			mPlaybackControlsRow.setTotalTime(duration);
-			mPlaybackControlsRow.setCurrentTime(0);
-			mPlaybackControlsRow.setBufferedProgress(0);
+			mPlaybackControlsRow.setDuration(duration);
+			mPlaybackControlsRow.setCurrentPosition(0);
+			mPlaybackControlsRow.setBufferedPosition(0);
+		}else {
+			Log.e(TAG, "mPlaybackControlsRow.getItem is null!");
 		}
+
 		if (SHOW_IMAGE) {
 			mPlaybackControlsRowTarget = new PicassoPlaybackControlsRowTarget(mPlaybackControlsRow);
 			updateVideoImage(mItems.get(mCurrentItem).getCardImageURI());
@@ -637,9 +548,9 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 					}
 
 					int currentTime = (int) state.getPosition();
-					mPlaybackControlsRow.setCurrentTime(currentTime);
-					// mPlaybackControlsRow.setBufferedProgress(currentTime + SIMULATED_BUFFERED_TIME);
-					mPlaybackControlsRow.setBufferedProgress(mPlaybackController.calcBufferedTime(currentTime));
+					mPlaybackControlsRow.setCurrentPosition(currentTime);
+					// mPlaybackControlsRow.setBufferedPosition(currentTime + SIMULATED_BUFFERED_TIME);
+					mPlaybackControlsRow.setBufferedPosition(mPlaybackController.calcBufferedTime(currentTime));
 
 				}
 			});

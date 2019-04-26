@@ -360,7 +360,6 @@ public class PlaybackController {
 //	}
 
 
-
 	public void setCurrentPlaybackState(int currentPlaybackState) {
 		this.mCurrentPlaybackState = currentPlaybackState;
 	}
@@ -368,5 +367,13 @@ public class PlaybackController {
 
 	public int getCurrentItem() {
 		return mCurrentItem;
+	}
+
+	public void setDuration(long duration) {
+		this.mDuration = duration;
+	}
+
+	public long getDuration() {
+		return mDuration;
 	}
 }
