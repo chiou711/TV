@@ -84,6 +84,7 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 
 	private PlaybackController mPlaybackController;
 	private PlaybackOverlayActivity activity;
+	String mCategoryName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,13 +95,18 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		mHandler = new Handler();
 
 		mSelectedMovie = (Movie) getActivity().getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+		// TODO: temporal workaround, each category has separated by 100 for now.
+		int currentItemIndex = (int)mSelectedMovie.getId() % 100;
 
 		mPlaybackController = activity.getPlaybackController();
 
 		setBackgroundType(PlaybackOverlayFragment.BG_LIGHT);
 		setFadingEnabled(true);
 
-		mItems = MovieProvider.getMovieItems();
+		mCategoryName = mSelectedMovie.getCategory();
+		mItems = VideoProvider.getMovieItems(mCategoryName);
+		//mItems = MovieProvider.getMovieItems();
+		mPlaybackController.setPlaylist(currentItemIndex, mItems);
 
 		setUpRows();
 
@@ -377,7 +383,7 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		mSecondaryActionsAdapter.add(mClosedCaptioningAction);
 		mSecondaryActionsAdapter.add(mMoreActions);
 
-		// updatePlaybackRow(mPlaybackController.getCurrentItem());
+		updatePlaybackRow(mPlaybackController.getCurrentItem());
 		mPlaybackController.updateMetadata();
 	}
 
@@ -589,8 +595,8 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		Log.d(TAG, "updatePlaybackRow");
 		if (mPlaybackControlsRow.getItem() != null) {
 			Movie item = (Movie) mPlaybackControlsRow.getItem();
-			item.setTitle(mItems.get(mCurrentItem).getTitle());
-			item.setStudio(mItems.get(mCurrentItem).getStudio());
+			item.setTitle(mItems.get(index).getTitle());
+			item.setStudio(mItems.get(index).getStudio());
 
 			mRowsAdapter.notifyArrayItemRangeChanged(0, 1);
 			/* total time is necessary to show video playing time progress bar */

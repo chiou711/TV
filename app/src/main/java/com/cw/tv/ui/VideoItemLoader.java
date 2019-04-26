@@ -2,10 +2,13 @@ package com.cw.tv.ui;
 
 import android.content.Context;
 //import android.support.v4.content.AsyncTaskLoader;
+import android.telecom.Connection;
 import android.util.Log;
 
 import com.cw.tv.data.MovieProvider;
 import com.cw.tv.model.Movie;
+
+import org.json.JSONException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +35,16 @@ public class VideoItemLoader extends AsyncTaskLoader<LinkedHashMap<String, List<
 		 * Prepare data here, it may take long time (Database access, URL connection, etc).
 		 * return value is used in onLoadFinished() method in Activity/Fragment's LoaderCallbacks.
 		 */
-		LinkedHashMap<String, List<Movie>> videoLists = prepareData();
+//		LinkedHashMap<String, List<Movie>> videoLists = prepareData();
+
+		LinkedHashMap<String, List<Movie>> videoLists = null;
+		try {
+			videoLists = VideoProvider.buildMedia(getContext());
+		} catch (JSONException e) {
+			Log.e(TAG, "buildMedia failed", e);
+			//cancelLoad();
+		}
+
 		return videoLists;
 	}
 

@@ -34,6 +34,8 @@ public class Movie  implements Serializable {
 	private String description;
 	private String cardImageUrl;
 	private String videoUrl;
+	private String category;
+	private String bgImageUrl;
 
 	public Movie() {
 	}
@@ -100,5 +102,19 @@ public class Movie  implements Serializable {
 
 	public void setVideoUrl(String videoUrl) {
 		this.videoUrl = videoUrl;
+	}
+
+	public String getCategory() { return category; }
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getBackgroundImageUrl() {
+		return bgImageUrl;
+	}
+
+	public void setBackgroundImageUrl(String bgImageUrl) {
+		this.bgImageUrl = bgImageUrl;
 	}
 }

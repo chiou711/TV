@@ -31,13 +31,21 @@ public class PlaybackController {
 	private long mDuration = -1;
 	private int mPosition = 0;
 	private int mCurrentItem; // index of current item
-	private static final ArrayList<Movie> mItems =  MovieProvider.getMovieItems(); // new ArrayList<Movie>();
+	private static ArrayList<Movie> mItems;// =  MovieProvider.getMovieItems(); // new ArrayList<Movie>();
 	String TAG = "PlaybackController";
 
 	public PlaybackController(Activity activity) {
 		mActivity = activity;
 		// mVideoView = (VideoView) activity.findViewById(VIDEO_VIEW_RESOURCE_ID);
 		createMediaSession(mActivity);
+	}
+
+	public void setPlaylist(int currentItemIndex, ArrayList<Movie> items) {
+		mCurrentItem = currentItemIndex;
+		mItems = items;
+		if(mItems == null){
+			Log.e(TAG, "mItems null!!");
+		}
 	}
 
 	private void createMediaSession(Activity activity) {
