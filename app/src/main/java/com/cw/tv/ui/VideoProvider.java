@@ -29,8 +29,13 @@ import java.util.Map;
 public class VideoProvider {
 
 	private static final String TAG = VideoProvider.class.getSimpleName();
-	public  static final String VIDEO_LIST_URL = "https://raw.githubusercontent.com/corochann/AndroidTVappTutorial/master/app/src/main/assets/video_lists.json";
-	public  static final String PREFIX_URL = "http://corochann.com/wp-content/uploads/2015/11/";
+
+	// original
+	//	public  static final String VIDEO_LIST_URL = "https://raw.githubusercontent.com/corochann/AndroidTVappTutorial/master/app/src/main/assets/video_lists.json";
+	//	public  static final String PREFIX_URL = "http://corochann.com/wp-content/uploads/2015/11/";
+
+	public  static final String VIDEO_LIST_URL = "https://raw.githubusercontent.com/chiou711/TV/master/app/src/main/assets/video_lists.json";
+	public  static final String PREFIX_URL = "https://storage.googleapis.com/android-tv/Sample%20videos/Google%2B/";
 
 	private static String TAG_ID = "id";
 	private static String TAG_MEDIA = "videos";
@@ -142,12 +147,14 @@ public class VideoProvider {
 						id = video.getLong(TAG_ID);
 						title = video.getString(TAG_TITLE);
 						videoUrl = PREFIX_URL + getVideoSourceUrl(videoUrls);
+						System.out.println("videoUrl = " + videoUrl);
 						bgImageUrl = PREFIX_URL + video.getString(TAG_BACKGROUND);
 						cardImageUrl = PREFIX_URL + video.getString(TAG_CARD_THUMB);
 						studio = video.getString(TAG_STUDIO);
+						System.out.println("studio = " + studio);
 
 						movie = buildMovieInfo(id, categoryName, title, description, studio,
-								videoUrl, cardImageUrl, bgImageUrl);
+												videoUrl, cardImageUrl, bgImageUrl);
 						categoryList.add(movie);
 					}
 					sMovieList.put(categoryName, categoryList);
@@ -188,8 +195,11 @@ public class VideoProvider {
 	private static String getVideoSourceUrl(final JSONArray videos) throws JSONException {
 		try {
 			final String url = videos.getString(0);
-			return (-1) == url.indexOf('%') ? url : URLDecoder.decode(url, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+			System.out.println("VideoProvider / url = " + url);
+//			return (-1) == url.indexOf('%') ? url : URLDecoder.decode(url, "UTF-8");
+			return (-1) == url.indexOf('%') ? url : url;
+//		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			throw new JSONException("Broken VM: no UTF-8");
 		}
 	}

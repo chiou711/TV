@@ -37,7 +37,7 @@ public class PlaybackOverlayActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mSelectedMovie = (Movie) getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+		mSelectedMovie = (Movie) getIntent().getParcelableExtra(DetailsActivity.MOVIE);
 		mCurrentItem = (int) mSelectedMovie.getId() - 1;
 
 		mPlaybackController = new PlaybackController(this);

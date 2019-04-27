@@ -252,9 +252,9 @@ public class MainFragment extends BrowseSupportFragment {
 			if (item instanceof Movie) {
 				Movie movie = (Movie) item;
 				Log.d(TAG, "Item: " + item.toString());
+
 				Intent intent = new Intent(getActivity(), DetailsActivity.class);
 				intent.putExtra(DetailsActivity.MOVIE, movie);
-
 				getActivity().startActivity(intent);
 			} else if (item instanceof String) {
 				if (item == "ErrorFragment") {

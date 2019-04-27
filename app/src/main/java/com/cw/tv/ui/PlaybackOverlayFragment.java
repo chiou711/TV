@@ -95,7 +95,7 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		activity = (PlaybackOverlayActivity) getContext();// Activity();
 		mHandler = new Handler();
 
-		mSelectedMovie = (Movie) getActivity().getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+		mSelectedMovie = (Movie) getActivity().getIntent().getParcelableExtra(DetailsActivity.MOVIE);
 		// TODO: temporal workaround, each category has separated by 100 for now.
 		int currentItemIndex = (int)mSelectedMovie.getId() % 100;
 
@@ -105,8 +105,13 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		setFadingEnabled(true);
 
 		mCategoryName = mSelectedMovie.getCategory();
+
+		//option 1
 		mItems = VideoProvider.getMovieItems(mCategoryName);
-		//mItems = MovieProvider.getMovieItems();
+
+		//option 2
+//		mItems = MovieProvider.getMovieItems();
+
 		mPlaybackController.setPlaylist(currentItemIndex, mItems);
 
 		setUpRows();
@@ -324,8 +329,8 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 					mPlaybackControlsRow.setBufferedPosition(mPlaybackController.calcBufferedTime((int)currentTime));
 
 					if (totalTime > 0 && totalTime <= currentTime + VIDEO_PLAY_FINISHED_MARGIN) {
-//						stopProgressAutomation();
-						mMediaController.getTransportControls().skipToNext();
+						stopProgressAutomation();
+//						mMediaController.getTransportControls().skipToNext();
 						//next(true);
 					} else {
 //						mHandler.postDelayed(this, updatePeriod);
