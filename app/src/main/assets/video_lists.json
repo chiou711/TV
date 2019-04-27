@@ -5,36 +5,36 @@
       "videos": [
         {
           "id": 0,
-          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "description": "Jon introduces Instant Upload with a few thoughts on how we remember the things that matter. Check out some ways we've been rethinking real-life sharing for the web at plus.google.com",
           "sources": [
-            "birds_on_street_at_city.mp4"
+            "Google%2B_%20Instant%20Upload.mp4"
           ],
-          "card": "birds_on_street_at_city_thumbnail.jpg",
-          "background": "birds_on_street_at_city_bg.jpg",
-          "title": "Birds on street at city",
-          "studio": "Pexel: https://videos.pexels.com/videos/birds-on-street-at-city-485"
+          "card": "Google%2B_%20Instant%20Upload/card.jpg",
+          "background": "Google%2B_%20Instant%20Upload/bg.jpg",
+          "title": "Instant Upload",
+          "studio": "Google+"
         },
         {
           "id": 1,
-          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "description": "With Google+ Instant Upload, every picture you take on your phone is instantly backed up to a private Google+ album. It's a simple way to make sure you never lose another memory.",
           "sources": [
-            "waterfall_stream_nature.mp4"
+            "Google%2B_%20New%20Dad.mp4"
           ],
-          "card": "waterfall_stream_nature_thumbnail.jpg",
-          "background": "waterfall_stream_nature_bg.jpg",
-          "title": "Waterfall stream nature",
-          "studio": "Pexel: https://videos.pexels.com/videos/waterfall-stream-nature-423"
+          "card": "Google%2B_%20New%20Dad/card.jpg",
+          "background": "Google%2B_%20New%20Dad/bg.jpg",
+          "title": "New Dad",
+          "studio": "Google+"
         },
         {
           "id": 2,
-          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "description": "Laugh, share news, celebrate, learn something new or stay in touch with Hangouts. And with Hangouts on your phone, you can drop in from wherever you are.",
           "sources": [
-            "slow_motion_dog_people_and_a_firecracker.mp4"
+            "Google%2B_%20Say%20more%20with%20Hangouts.mp4"
           ],
-          "card": "slow_motion_dog_people_and_a_firecracker_thumbnail.jpg",
-          "background": "slow_motion_dog_people_and_a_firecracker_bg.jpg",
-          "title": "Slow motion dog people and a firecracker",
-          "studio": "Pexel: https://videos.pexels.com/videos/slow-motion-dog-people-and-a-firecracker-525 "
+          "card": "Google%2B_%20Say%20more%20with%20Hangouts/card.jpg",
+          "background": "Google%2B_%20Say%20more%20with%20Hangouts/bg.jpg",
+          "title": "Say more with Hangouts",
+          "studio": "Google+"
         }
       ]
     },
@@ -43,36 +43,36 @@
       "videos": [
         {
           "id": 100,
-          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "description": "Search on Google+ helps you get advice from the people you know -- sometimes when you least expect it. Check out some ways we've been rethinking real-life sharing for the web at plus.google.com.",
           "sources": [
-            "greenhouse_with_cacti.mp4"
+            "Google%2B_%20Search.mp4"
           ],
-          "card": "greenhouse_with_cacti_thumbnail.jpg",
-          "background": "greenhouse_with_cacti_bg.jpg",
-          "title": "Greenhouse with cacti",
-          "studio": "Pexel: https://videos.pexels.com/videos/greenhouse-with-cacti-534"
+          "card": "Google%2B_%20Search/card.jpg",
+          "background": "Google%2B_%20Search/bg.jpg",
+          "title": "Google+ Search",
+          "studio": "Google+"
         },
         {
           "id": 101,
-          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "description": "New ways of sharing the right things with the right people. Join at http://google.com/+",
           "sources": [
-            "timelapse_of_stockholm_at_night.mp4"
+            "Google%2B_%20Sharing%20but%20like%20real%20life.mp4"
           ],
-          "card": "timelapse_of_stockholm_at_night_thumbnail.jpg",
-          "background": "timelapse_of_stockholm_at_night_bg.jpg",
-          "title": "Timelapse of stockholm at night",
-          "studio": "https://videos.pexels.com/videos/timelapse-of-stockholm-at-night-539"
+          "card": "Google%2B_%20Sharing%20but%20like%20real%20life/card.jpg",
+          "background": "Google%2B_%20Sharing%20but%20like%20real%20life/bg.jpg",
+          "title": "Sharing but like real life",
+          "studio": "Google+"
         },
         {
           "id": 102,
-          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "description": "Jed introduces Circles with a few thoughts on the nature of friendship. Check out some ways we've been rethinking real-life sharing for the web at plus.google.com.",
           "sources": [
-            "roller_coaster.mp4"
+            "Google%2B_%20Circles.mp4"
           ],
-          "card": "roller_coaster_thumbnail.jpg",
-          "background": "roller_coaster_bg.jpg",
-          "title": "Roller coaster",
-          "studio": "Pexel: https://videos.pexels.com/videos/roller-coaster-560"
+          "card": "Google%2B_%20Circles/card.jpg",
+          "background": "Google%2B_%20Circles/bg.jpg",
+          "title": "Google+ Circles",
+          "studio": "Google+"
         }
       ]
     }
