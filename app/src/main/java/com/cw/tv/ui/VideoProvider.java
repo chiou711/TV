@@ -146,7 +146,15 @@ public class VideoProvider {
 						}
 						id = video.getLong(TAG_ID);
 						title = video.getString(TAG_TITLE);
+
+						//todo formal
 						videoUrl = PREFIX_URL + getVideoSourceUrl(videoUrls);
+
+						//todo test only
+//						videoUrl = "https://pixabay.com/videos/download/video-22589_small.mp4?attachment";
+//						videoUrl = "https://player.vimeo.com/external/302482838.hd.mp4?s=b6958a1ec55375feff547828393b0807d8cfe18e&profile_id=174&oauth2_token_id=57447761&download=1";
+//						videoUrl = "https://pixabay.com/videos/download/video-91_medium.mp4?attachment";
+
 						System.out.println("videoUrl = " + videoUrl);
 						bgImageUrl = PREFIX_URL + video.getString(TAG_BACKGROUND);
 						cardImageUrl = PREFIX_URL + video.getString(TAG_CARD_THUMB);

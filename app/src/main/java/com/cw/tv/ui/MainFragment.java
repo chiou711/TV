@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.cw.tv.R;
 import com.cw.tv.data.MovieProvider;
+import com.cw.tv.model.CustomListRow;
+import com.cw.tv.model.IconHeaderItem;
 import com.cw.tv.model.Movie;
 import com.cw.tv.recommendation.RecommendationFactory;
 
@@ -33,6 +35,7 @@ import androidx.leanback.widget.ListRowPresenter;
 import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.OnItemViewSelectedListener;
 import androidx.leanback.widget.Presenter;
+import androidx.leanback.widget.PresenterSelector;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.loader.app.LoaderManager;
@@ -54,6 +57,8 @@ public class MainFragment extends BrowseSupportFragment {
 	private static int recommendationCounter = 0;
 	private static final int VIDEO_ITEM_LOADER_ID = 1;
 	Context context;
+	private ArrayList<CustomListRow> mVideoListRowArray;
+	private CustomListRow mGridItemListRow;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -63,7 +68,10 @@ public class MainFragment extends BrowseSupportFragment {
 
 		setupUIElements();
 
-		//loadRows();
+		/* Set up rows with light data. done in main thread. */
+		loadRows();
+		setRows();
+
 		getLoaderManager().initLoader(VIDEO_ITEM_LOADER_ID, null, new MainFragmentLoaderCallbacks());
 
 		setupEventListeners();
@@ -71,6 +79,26 @@ public class MainFragment extends BrowseSupportFragment {
 		//		simpleBackgroundManager = new SimpleBackgroundManager(getActivity());
 		picassoBackgroundManager = new PicassoBackgroundManager(getActivity());
 		context = getActivity();
+	}
+
+	/**
+	 * Updates UI after loading Row done.
+	 */
+	private void setRows() {
+		mRowsAdapter = new ArrayObjectAdapter(new CustomListRowPresenter()); // Initialize
+
+		if(mVideoListRowArray != null) {
+			for (CustomListRow videoListRow : mVideoListRowArray) {
+				mRowsAdapter.add(videoListRow);
+			}
+		}
+		if(mGridItemListRow != null) {
+			mRowsAdapter.add(mGridItemListRow);
+		}
+
+		/* Set */
+		setAdapter(mRowsAdapter);
+
 	}
 
 	private class MainFragmentLoaderCallbacks implements LoaderManager.LoaderCallbacks<LinkedHashMap<String, List<Movie>>> {
@@ -99,17 +127,7 @@ public class MainFragment extends BrowseSupportFragment {
 					mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
 					int index = 0;
-					/* GridItemPresenter */
-					HeaderItem gridItemPresenterHeader = new HeaderItem(index, "GridItemPresenter");
-					index++;
-
-					GridItemPresenter mGridPresenter = new GridItemPresenter();
-					ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
-					gridRowAdapter.add(GRID_STRING_ERROR_FRAGMENT);
-					gridRowAdapter.add(GRID_STRING_GUIDED_STEP_FRAGMENT);
-					gridRowAdapter.add(GRID_STRING_RECOMMENDATION);
-					gridRowAdapter.add(GRID_STRING_SPINNER);
-					mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
+					mVideoListRowArray = new ArrayList<>();
 
 					/* CardPresenter */
 					CardPresenter cardPresenter = new CardPresenter();
@@ -124,15 +142,21 @@ public class MainFragment extends BrowseSupportFragment {
 								cardRowAdapter.add(movie);
 								mItems.add(movie);           // Add movie reference for recommendation purpose.
 							}
-							HeaderItem header = new HeaderItem(index, entry.getKey());
+
+							/* loadRows: videoListRow - CardPresenter */
+							IconHeaderItem header = new IconHeaderItem(index, entry.getKey(), R.drawable.ic_play_arrow_white_48dp);
 							index++;
-							mRowsAdapter.add(new ListRow(header, cardRowAdapter));
+							CustomListRow videoListRow = new CustomListRow(header, cardRowAdapter);
+							videoListRow.setNumRows(1);
+							mVideoListRowArray.add(videoListRow);
+
 						}
 					} else {
 						Log.e(TAG, "An error occurred fetching videos");
 					}
+
 					/* Set */
-					setAdapter(mRowsAdapter);
+					setRows();
 			}
 		}
 
@@ -155,59 +179,30 @@ public class MainFragment extends BrowseSupportFragment {
 		setBrandColor(getResources().getColor(R.color.fastlane_background));
 		// set search icon color
 		setSearchAffordanceColor(getResources().getColor(R.color.search_opaque));
+
+		setHeaderPresenterSelector(new PresenterSelector() {
+			@Override
+			public Presenter getPresenter(Object o) {
+				return new IconHeaderItemPresenter();
+			}
+		});
 	}
 
 	private void loadRows() {
 		mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
 		/* GridItemPresenter */
-		HeaderItem gridItemPresenterHeader = new HeaderItem(0, "GridItemPresenter");
+		IconHeaderItem gridItemPresenterHeader = new IconHeaderItem(0, "GridItemPresenter", R.drawable.ic_add_white_48dp);
 
 		GridItemPresenter mGridPresenter = new GridItemPresenter();
 		ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
-//		gridRowAdapter.add("ITEM 1");
 		gridRowAdapter.add("ErrorFragment");
 		gridRowAdapter.add("GuidedStepFragment");
 		gridRowAdapter.add(GRID_STRING_RECOMMENDATION);
 		gridRowAdapter.add(GRID_STRING_SPINNER);
 		mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
 
-		/* CardPresenter */
-		HeaderItem cardPresenterHeader = new HeaderItem(1, "CardPresenter");
-		CardPresenter cardPresenter = new CardPresenter();
-		ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
-
-//		for(int i=0; i<10; i++) {
-//			Movie movie = new Movie();
-//			movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
-//
-//			movie.setTitle("title" + i);
-//			movie.setStudio("studio" + i);
-//			cardRowAdapter.add(movie);
-//		}
-
-//		for(int i=0; i<10; i++) {
-//			Movie movie = new Movie();
-//			if(i%3 == 0) {
-//				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
-//			} else if (i%3 == 1) {
-//				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02630.jpg");
-//			} else {
-//				movie.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02529.jpg");
-//			}
-//			movie.setTitle("title" + i);
-//			movie.setStudio("studio" + i);
-//			cardRowAdapter.add(movie);
-//		}
-
-		for (Movie movie : mItems) {
-			cardRowAdapter.add(movie);
-		}
-
-		mRowsAdapter.add(new ListRow(cardPresenterHeader, cardRowAdapter));
-
-		/* set */
-		setAdapter(mRowsAdapter);
+		mGridItemListRow = new CustomListRow(gridItemPresenterHeader, gridRowAdapter);
 	}
 
 	private void setupEventListeners() {
@@ -229,11 +224,9 @@ public class MainFragment extends BrowseSupportFragment {
 		                           RowPresenter.ViewHolder rowViewHolder, Row row) {
 			// each time the item is selected, code inside here will be executed.
 			if (item instanceof String) { // GridItemPresenter row
-//				simpleBackgroundManager.clearBackground();
 				picassoBackgroundManager.updateBackgroundWithDelay("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/10/RIMG0656.jpg");
 
 			} else if (item instanceof Movie) { // CardPresenter row
-//				simpleBackgroundManager.updateBackground(getActivity().getDrawable(R.drawable.movie));
 				picassoBackgroundManager.updateBackgroundWithDelay(((Movie) item).getCardImageUrl());
 			}
 		}
@@ -271,7 +264,6 @@ public class MainFragment extends BrowseSupportFragment {
 					Log.v(TAG, "onClick recommendation. counter " + recommendationCounter);
 					RecommendationFactory recommendationFactory = new RecommendationFactory(getActivity().getApplicationContext());
 					Movie movie = mItems.get(recommendationCounter % mItems.size());
-//					Movie movie = mItems.get(2);
 					recommendationFactory.recommend(recommendationCounter, movie, NotificationCompat.PRIORITY_HIGH);
 					Toast.makeText(getActivity(), "Recommendation sent (item " + recommendationCounter +")", Toast.LENGTH_SHORT).show();
 					recommendationCounter++;
