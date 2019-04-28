@@ -1,4 +1,4 @@
-package com.cw.tv.ui;
+package com.cw.tv.ui.presenter;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.cw.tv.common.Utils;
 import com.cw.tv.data.MovieProvider;
 import com.cw.tv.model.Movie;
+import com.cw.tv.ui.presenter.CardPresenter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,10 +16,15 @@ import android.widget.Toast;
 
 import com.cw.tv.R;
 import com.cw.tv.data.MovieProvider;
+import com.cw.tv.data.VideoItemLoader;
 import com.cw.tv.model.CustomListRow;
 import com.cw.tv.model.IconHeaderItem;
 import com.cw.tv.model.Movie;
 import com.cw.tv.recommendation.RecommendationFactory;
+import com.cw.tv.ui.background.PicassoBackgroundManager;
+import com.cw.tv.ui.presenter.CardPresenter;
+import com.cw.tv.ui.presenter.CustomListRowPresenter;
+import com.cw.tv.ui.presenter.IconHeaderItemPresenter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -29,7 +34,6 @@ import java.util.Map;
 import androidx.core.app.NotificationCompat;
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
-import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ListRow;
 import androidx.leanback.widget.ListRowPresenter;
 import androidx.leanback.widget.OnItemViewClickedListener;
@@ -46,17 +50,18 @@ public class MainFragment extends BrowseSupportFragment {
 	private ArrayObjectAdapter mRowsAdapter;
 	private static final int GRID_ITEM_WIDTH = 300;
 	private static final int GRID_ITEM_HEIGHT = 200;
-	private static SimpleBackgroundManager simpleBackgroundManager = null;
-	private static PicassoBackgroundManager picassoBackgroundManager = null;
-	ArrayList<Movie> mItems = MovieProvider.getMovieItems();
+//	private SimpleBackgroundManager simpleBackgroundManager = null;
+	private PicassoBackgroundManager picassoBackgroundManager = null;
+	private ArrayList<Movie> mItems = MovieProvider.getMovieItems();
 	private static final String GRID_STRING_ERROR_FRAGMENT = "ErrorFragment";
 	private static final String GRID_STRING_GUIDED_STEP_FRAGMENT = "GuidedStepFragment";
+	private static final String GRID_STRING_VERTICAL_GRID_FRAGMENT = "VerticalGridFragment";
 	private static final String GRID_STRING_RECOMMENDATION = "Recommendation";
 	private static final String GRID_STRING_SPINNER = "Spinner";
 
 	private static int recommendationCounter = 0;
 	private static final int VIDEO_ITEM_LOADER_ID = 1;
-	Context context;
+	private Context context;
 	private ArrayList<CustomListRow> mVideoListRowArray;
 	private CustomListRow mGridItemListRow;
 
@@ -64,7 +69,6 @@ public class MainFragment extends BrowseSupportFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.i(TAG, "onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
-
 
 		setupUIElements();
 
@@ -98,7 +102,6 @@ public class MainFragment extends BrowseSupportFragment {
 
 		/* Set */
 		setAdapter(mRowsAdapter);
-
 	}
 
 	private class MainFragmentLoaderCallbacks implements LoaderManager.LoaderCallbacks<LinkedHashMap<String, List<Movie>>> {
@@ -147,7 +150,7 @@ public class MainFragment extends BrowseSupportFragment {
 							IconHeaderItem header = new IconHeaderItem(index, entry.getKey(), R.drawable.ic_play_arrow_white_48dp);
 							index++;
 							CustomListRow videoListRow = new CustomListRow(header, cardRowAdapter);
-							videoListRow.setNumRows(1);
+							videoListRow.setNumRows(3); // multiple rows
 							mVideoListRowArray.add(videoListRow);
 
 						}
@@ -164,7 +167,6 @@ public class MainFragment extends BrowseSupportFragment {
 		public void onLoaderReset(Loader<LinkedHashMap<String, List<Movie>>> loader) {
 			Log.d(TAG, "VideoItemLoader: onLoadReset");
 			/* When it is called, Loader data is now unavailable due to some reason. */
-
 		}
 	}
 
@@ -196,9 +198,10 @@ public class MainFragment extends BrowseSupportFragment {
 
 		GridItemPresenter mGridPresenter = new GridItemPresenter();
 		ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
-		gridRowAdapter.add("ErrorFragment");
-		gridRowAdapter.add("GuidedStepFragment");
+		gridRowAdapter.add(GRID_STRING_ERROR_FRAGMENT);
+		gridRowAdapter.add(GRID_STRING_GUIDED_STEP_FRAGMENT);
 		gridRowAdapter.add(GRID_STRING_RECOMMENDATION);
+		gridRowAdapter.add(GRID_STRING_VERTICAL_GRID_FRAGMENT);
 		gridRowAdapter.add(GRID_STRING_SPINNER);
 		mRowsAdapter.add(new ListRow(gridItemPresenterHeader, gridRowAdapter));
 
@@ -230,11 +233,7 @@ public class MainFragment extends BrowseSupportFragment {
 				picassoBackgroundManager.updateBackgroundWithDelay(((Movie) item).getCardImageUrl());
 			}
 		}
-
-
 	}
-
-
 
 	private final class ItemViewClickedListener implements OnItemViewClickedListener {
 		@Override
@@ -250,11 +249,14 @@ public class MainFragment extends BrowseSupportFragment {
 				intent.putExtra(DetailsActivity.MOVIE, movie);
 				getActivity().startActivity(intent);
 			} else if (item instanceof String) {
-				if (item == "ErrorFragment") {
+				if (item == GRID_STRING_ERROR_FRAGMENT) {
 					Intent intent = new Intent(getActivity(), ErrorActivity.class);
 					startActivity(intent);
-				} else if (item == "GuidedStepFragment") {
+				} else if (item == GRID_STRING_GUIDED_STEP_FRAGMENT) {
 					Intent intent = new Intent(getActivity(), GuidedStepActivity.class);
+					startActivity(intent);
+				} else if (item == GRID_STRING_VERTICAL_GRID_FRAGMENT) {
+					Intent intent = new Intent(getActivity(), VerticalGridActivity.class);
 					startActivity(intent);
 				} else if (item == GRID_STRING_RECOMMENDATION) {
 					//https://developer.android.com/training/tv/discovery/recommendations-row.html

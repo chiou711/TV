@@ -1,11 +1,9 @@
-package com.cw.tv.ui;
+package com.cw.tv.data;
 
 import android.content.Context;
 //import android.support.v4.content.AsyncTaskLoader;
-import android.telecom.Connection;
 import android.util.Log;
 
-import com.cw.tv.data.MovieProvider;
 import com.cw.tv.model.Movie;
 
 import org.json.JSONException;
@@ -22,7 +20,7 @@ public class VideoItemLoader extends AsyncTaskLoader<LinkedHashMap<String, List<
 
 	private static final String TAG = VideoItemLoader.class.getSimpleName();
 
-	VideoItemLoader(Context context) {
+	public VideoItemLoader(Context context) {
 		super(context);
 	}
 

@@ -9,7 +9,13 @@ import android.util.Log;
 
 import com.cw.tv.R;
 import com.cw.tv.common.Utils;
+import com.cw.tv.data.VideoProvider;
 import com.cw.tv.model.Movie;
+import com.cw.tv.ui.background.PicassoBackgroundManager;
+import com.cw.tv.ui.presenter.CardPresenter;
+import com.cw.tv.ui.presenter.CustomDetailsOverviewRowPresenter;
+import com.cw.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter;
+import com.cw.tv.ui.presenter.DetailsDescriptionPresenter;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -25,7 +31,6 @@ import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.ClassPresenterSelector;
 import androidx.leanback.widget.DetailsOverviewRow;
-import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.ListRow;

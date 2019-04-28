@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.cw.tv.ui;
+package com.cw.tv.ui.presenter;
 
 import com.cw.tv.model.Movie;
 

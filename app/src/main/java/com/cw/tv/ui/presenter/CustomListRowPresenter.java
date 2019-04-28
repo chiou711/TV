@@ -1,4 +1,4 @@
-package com.cw.tv.ui;
+package com.cw.tv.ui.presenter;
 
 
 import com.cw.tv.model.CustomListRow;
@@ -34,6 +34,6 @@ public class CustomListRowPresenter extends ListRowPresenter {
         super.initializeRowViewHolder(holder);
 
         /* Disable Shadow */
-        // setShadowEnabled(false);
+        setShadowEnabled(false);
     }
 }

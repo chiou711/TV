@@ -15,8 +15,10 @@ import android.util.Log;
 
 import com.cw.tv.common.PlaybackController;
 import com.cw.tv.common.Utils;
-import com.cw.tv.data.MovieProvider;
+import com.cw.tv.data.VideoProvider;
 import com.cw.tv.model.Movie;
+import com.cw.tv.ui.presenter.CardPresenter;
+import com.cw.tv.ui.presenter.DescriptionPresenter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -187,7 +189,8 @@ public class PlaybackOverlayFragment extends PlaybackSupportFragment {
 		ClassPresenterSelector ps = new ClassPresenterSelector();
 
 		PlaybackControlsRowPresenter playbackControlsRowPresenter;
-		playbackControlsRowPresenter = new PlaybackControlsRowPresenter(new DetailsDescriptionPresenter());
+//		playbackControlsRowPresenter = new PlaybackControlsRowPresenter(new DetailsDescriptionPresenter());
+		playbackControlsRowPresenter = new PlaybackControlsRowPresenter(new DescriptionPresenter());
 
 		ps.addClassPresenter(PlaybackControlsRow.class, playbackControlsRowPresenter);
 		ps.addClassPresenter(ListRow.class, new ListRowPresenter());

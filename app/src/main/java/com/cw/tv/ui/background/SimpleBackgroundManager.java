@@ -1,4 +1,4 @@
-package com.cw.tv.ui;
+package com.cw.tv.ui.background;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;

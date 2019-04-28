@@ -1,4 +1,4 @@
-package com.cw.tv.ui;
+package com.cw.tv.data;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,11 +14,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +28,10 @@ public class VideoProvider {
 	private static final String TAG = VideoProvider.class.getSimpleName();
 
 	// original
-	//	public  static final String VIDEO_LIST_URL = "https://raw.githubusercontent.com/corochann/AndroidTVappTutorial/master/app/src/main/assets/video_lists.json";
-	//	public  static final String PREFIX_URL = "http://corochann.com/wp-content/uploads/2015/11/";
+//		public  static final String VIDEO_LIST_URL = "https://raw.githubusercontent.com/corochann/AndroidTVappTutorial/master/app/src/main/assets/video_lists.json";
+//		public  static final String PREFIX_URL = "http://corochann.com/wp-content/uploads/2015/11/";
 
+	// test
 	public  static final String VIDEO_LIST_URL = "https://raw.githubusercontent.com/chiou711/TV/master/app/src/main/assets/video_lists.json";
 	public  static final String PREFIX_URL = "https://storage.googleapis.com/android-tv/Sample%20videos/Google%2B/";
 
@@ -204,7 +202,11 @@ public class VideoProvider {
 		try {
 			final String url = videos.getString(0);
 			System.out.println("VideoProvider / url = " + url);
+
+			// original
 //			return (-1) == url.indexOf('%') ? url : URLDecoder.decode(url, "UTF-8");
+
+			// test
 			return (-1) == url.indexOf('%') ? url : url;
 //		} catch (UnsupportedEncodingException e) {
 		} catch (Exception e) {
